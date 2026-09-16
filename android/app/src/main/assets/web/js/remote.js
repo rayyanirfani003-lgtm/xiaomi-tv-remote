@@ -86,6 +86,14 @@ class TVRemote {
     }
 
     sendKey(keyCode) {
+        const now = Date.now();
+        const last = this._lastKeyTime || 0;
+        if (now - last < 200 && this._lastKeyCode === keyCode) {
+            return; // debounce double-fire
+        }
+        this._lastKeyTime = now;
+        this._lastKeyCode = keyCode;
+
         this.log(`Mengirim key: ${keyCode}`, 'info');
 
         if (this.connectionType === 'wifi') {
