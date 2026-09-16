@@ -163,7 +163,7 @@ class WifiRemoteManager(private val activity: MainActivity) {
             out.flush()
 
             val keyBase64 = Base64.encodeToString(buffer.toByteArray(), Base64.NO_WRAP)
-            return "$keyBase64 adb@android\0"
+            return "$keyBase64 adb@android\u0000"
         } catch (e: Exception) {
             Log.e(TAG, "Failed to convert public key: ${e.message}")
             return ""
@@ -184,7 +184,7 @@ class WifiRemoteManager(private val activity: MainActivity) {
                 inputStream = DataInputStream(BufferedInputStream(socket!!.getInputStream()))
 
                 // Send CNXN message
-                val deviceInfo = "host::\0"
+                val deviceInfo = "host::\u0000"
                 sendMessage(CMD_CNXN, ADB_VERSION, MAX_PAYLOAD, deviceInfo)
 
                 // Read response
