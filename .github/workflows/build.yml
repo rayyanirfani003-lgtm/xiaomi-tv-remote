@@ -21,9 +21,6 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-    - name: Setup Android SDK
-      uses: android-actions/setup-android@v3
-
     - name: Cache Gradle packages
       uses: actions/cache@v4
       with:
@@ -37,13 +34,10 @@ jobs:
     - name: Make gradlew executable
       run: chmod +x android/gradlew
 
-    - name: Download Gradle wrapper
-      working-directory: ./android
-      run: |
-        gradle wrapper --gradle-version 8.2
-
     - name: Build Debug APK
       working-directory: ./android
+      env:
+        ANDROID_HOME: /usr/local/lib/android/sdk
       run: ./gradlew assembleDebug
 
     - name: Upload APK
@@ -54,6 +48,8 @@ jobs:
 
     - name: Build Release APK
       working-directory: ./android
+      env:
+        ANDROID_HOME: /usr/local/lib/android/sdk
       run: ./gradlew assembleRelease
       continue-on-error: true
 
