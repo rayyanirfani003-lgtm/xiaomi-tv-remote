@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TV Remote - Xiaomi TV</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-left">
+                <div class="logo">📺</div>
+                <div class="header-title">
+                    <h1>TV Remote</h1>
+                    <span id="connection-status" class="status disconnected">Terputus</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <button id="btn-bt" class="conn-btn" title="Bluetooth">
+                    <span class="icon">📶</span>
+                    <span class="label">BT</span>
+                </button>
+                <button id="btn-wifi" class="conn-btn active" title="Wi-Fi">
+                    <span class="icon">📡</span>
+                    <span class="label">Wi-Fi</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mode Tabs -->
+        <div class="mode-tabs">
+            <button class="tab active" data-mode="basic">Dasar</button>
+            <button class="tab" data-mode="advanced">Lanjutan</button>
+            <button class="tab" data-mode="voice">Suara</button>
+        </div>
+
+        <!-- IP Configuration Panel -->
+        <div id="ip-panel" class="ip-panel">
+            <div class="ip-row">
+                <input type="text" id="tv-ip" placeholder="IP TV (contoh: 192.168.1.100)" value="">
+                <button id="btn-connect-ip" class="btn-primary">Hubungkan</button>
+            </div>
+            <div class="ip-info">
+                <span>Port: 5555 (ADB)</span>
+                <button id="btn-scan" class="btn-link">🔍 Scan Jaringan</button>
+            </div>
+        </div>
+
+        <!-- Bluetooth Panel -->
+        <div id="bt-panel" class="bt-panel hidden">
+            <div class="bt-row">
+                <span class="bt-label">TV Xiaomi:</span>
+                <span id="bt-device-name" class="bt-device">Tidak terhubung</span>
+            </div>
+            <button id="btn-bt-pair" class="btn-primary btn-block">🔗 Pairing TV</button>
+            <p class="bt-hint">Pairing harus dilakukan di pengaturan Bluetooth TV Xiaomi</p>
+        </div>
+
+        <!-- Basic Mode Controls -->
+        <div id="mode-basic" class="mode-content active">
+            <!-- Power Row -->
+            <div class="control-row power-row">
+                <button class="btn-power" data-key="KEYCODE_POWER">
+                    <span class="icon">⏻</span>
+                </button>
+                <button class="btn-source" data-key="KEYCODE_TV_INPUT">
+                    <span class="font-icon">📥</span> Source
+                </button>
+                <button class="btn-mute" data-key="KEYCODE_MUTE">
+                    <span class="icon">🔇</span>
+                </button>
+            </div>
+
+            <!-- D-Pad -->
+            <div class="dpad-container">
+                <button class="dpad-btn dpad-up" data-key="KEYCODE_DPAD_UP">
+                    <span class="icon">▲</span>
+                </button>
+                <button class="dpad-btn dpad-left" data-key="KEYCODE_DPAD_LEFT">
+                    <span class="icon">◀</span>
+                </button>
+                <button class="dpad-btn dpad-center" data-key="KEYCODE_DPAD_CENTER">
+                    OK
+                </button>
+                <button class="dpad-btn dpad-right" data-key="KEYCODE_DPAD_RIGHT">
+                    <span class="icon">▶</span>
+                </button>
+                <button class="dpad-btn dpad-down" data-key="KEYCODE_DPAD_DOWN">
+                    <span class="icon">▼</span>
+                </button>
+            </div>
+
+            <!-- Volume + Channel -->
+            <div class="control-row vol-ch-row">
+                <div class="vol-group">
+                    <button class="round-btn vol-up" data-key="KEYCODE_VOLUME_UP">
+                        <span class="icon">🔊</span>+
+                    </button>
+                    <span class="group-label">Volume</span>
+                    <button class="round-btn vol-down" data-key="KEYCODE_VOLUME_DOWN">
+                        <span class="icon">🔉</span>−
+                    </button>
+                </div>
+                <div class="ch-group">
+                    <button class="round-btn ch-up" data-key="KEYCODE_CHANNEL_UP">
+                        <span class="icon">▲</span>+
+                    </button>
+                    <span class="group-label">Channel</span>
+                    <button class="round-btn ch-down" data-key="KEYCODE_CHANNEL_DOWN">
+                        <span class="icon">▼</span>−
+                    </button>
+                </div>
+            </div>
+
+            <!-- Navigation Row -->
+            <div class="control-row nav-row">
+                <button class="nav-btn" data-key="KEYCODE_BACK">
+                    <span class="icon">◀</span> Back
+                </button>
+                <button class="nav-btn" data-key="KEYCODE_HOME">
+                    <span class="icon">🏠</span> Home
+                </button>
+                <button class="nav-btn" data-key="KEYCODE_MENU">
+                    <span class="icon">☰</span> Menu
+                </button>
+            </div>
+        </div>
+
+        <!-- Advanced Mode Controls -->
+        <div id="mode-advanced" class="mode-content">
+            <!-- App Launchers -->
+            <div class="section-title">Buka Aplikasi</div>
+            <div class="app-grid">
+                <button class="app-btn" data-app="netflix">
+                    <span class="app-icon">🎬</span>
+                    <span class="app-name">Netflix</span>
+                </button>
+                <button class="app-btn" data-app="youtube">
+                    <span class="app-icon">▶</span>
+                    <span class="app-name">YouTube</span>
+                </button>
+                <button class="app-btn" data-app="spotify">
+                    <span class="app-icon">🎵</span>
+                    <span class="app-name">Spotify</span>
+                </button>
+                <button class="app-btn" data-app="disney">
+                    <span class="app-icon">🏰</span>
+                    <span class="app-name">Disney+</span>
+                </button>
+                <button class="app-btn" data-app="vidio">
+                    <span class="app-icon">📹</span>
+                    <span class="app-name">Vidio</span>
+                </button>
+                <button class="app-btn" data-app="prime">
+                    <span class="app-icon">🎞</span>
+                    <span class="app-name">Prime Video</span>
+                </button>
+            </div>
+
+            <!-- Number Pad -->
+            <div class="section-title">Angka</div>
+            <div class="numpad">
+                <button class="num-btn" data-key="KEYCODE_0">0</button>
+                <button class="num-btn" data-key="KEYCODE_1">1</button>
+                <button class="num-btn" data-key="KEYCODE_2">2</button>
+                <button class="num-btn" data-key="KEYCODE_3">3</button>
+                <button class="num-btn" data-key="KEYCODE_4">4</button>
+                <button class="num-btn" data-key="KEYCODE_5">5</button>
+                <button class="num-btn" data-key="KEYCODE_6">6</button>
+                <button class="num-btn" data-key="KEYCODE_7">7</button>
+                <button class="num-btn" data-key="KEYCODE_8">8</button>
+                <button class="num-btn" data-key="KEYCODE_9">9</button>
+            </div>
+
+            <!-- Extra Keys -->
+            <div class="section-title">Tombol Tambahan</div>
+            <div class="extra-keys">
+                <button class="extra-btn" data-key="KEYCODE_GUIDE">
+                    <span class="icon">📋</span> Guide
+                </button>
+                <button class="extra-btn" data-key="KEYCODE_INFO">
+                    <span class="icon">ℹ</span> Info
+                </button>
+                <button class="extra-btn" data-key="KEYCODE_PROG_RED">
+                    <span class="red-dot"></span>
+                </button>
+                <button class="extra-btn" data-key="KEYCODE_PROG_GREEN">
+                    <span class="green-dot"></span>
+                </button>
+                <button class="extra-btn" data-key="KEYCODE_PROG_YELLOW">
+                    <span class="yellow-dot"></span>
+                </button>
+                <button class="extra-btn" data-key="KEYCODE_PROG_BLUE">
+                    <span class="blue-dot"></span>
+                </button>
+            </div>
+
+            <!-- Settings -->
+            <div class="section-title">Pengaturan TV</div>
+            <div class="settings-grid">
+                <button class="setting-btn" data-key="KEYCODE_SETTINGS">
+                    <span class="icon">⚙</span> Pengaturan
+                </button>
+                <button class="setting-btn" data-key="KEYCODE_PICTURE_MODE">
+                    <span class="icon">🖼</span> Gambar
+                </button>
+                <button class="setting-btn" data-key="KEYCODE_SOUND_MODE">
+                    <span class="icon">🔔</span> Suara
+                </button>
+                <button class="setting-btn" data-key="KEYCODE_TIMER">
+                    <span class="icon">⏰</span> Timer
+                </button>
+            </div>
+        </div>
+
+        <!-- Voice Mode -->
+        <div id="mode-voice" class="mode-content">
+            <div class="voice-container">
+                <button id="btn-voice" class="voice-btn">
+                    <span class="voice-icon">🎤</span>
+                </button>
+                <p class="voice-hint">Tekan dan bicara untuk pencarian suara</p>
+                <div id="voice-status" class="voice-status"></div>
+            </div>
+
+            <!-- Quick Voice Commands -->
+            <div class="section-title">Perintah Cepat</div>
+            <div class="quick-commands">
+                <button class="cmd-btn" data-cmd="netflix">Buka Netflix</button>
+                <button class="cmd-btn" data-cmd="youtube">Buka YouTube</button>
+                <button class="cmd-btn" data-cmd="volume_up">Volume Naik</button>
+                <button class="cmd-btn" data-cmd="volume_down">Volume Turun</button>
+                <button class="cmd-btn" data-cmd="mute">Bisu</button>
+                <button class="cmd-btn" data-cmd="power">Matikan TV</button>
+            </div>
+        </div>
+
+        <!-- Log Panel -->
+        <div id="log-panel" class="log-panel">
+            <div class="log-header">
+                <span>📋 Log Aktivitas</span>
+                <button id="btn-clear-log" class="btn-link">Hapus</button>
+            </div>
+            <div id="log-content" class="log-content"></div>
+        </div>
+    </div>
+
+    <script src="js/remote.js"></script>
+</body>
+</html>

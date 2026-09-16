@@ -1,0 +1,18 @@
+#!/bin/bash
+# Minimal Gradle Wrapper
+# Downloads and runs the requested version of Gradle
+
+GRADLE_VERSION="8.2"
+DIST_URL="https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip"
+DIST_FILE="/tmp/gradle-${GRADLE_VERSION}-bin.zip"
+GRADLE_HOME="$HOME/.gradle/wrapper/dists/gradle-${GRADLE_VERSION}-bin/gradle-${GRADLE_VERSION}"
+
+if [ ! -f "$GRADLE_HOME/bin/gradle" ]; then
+    echo "Downloading Gradle ${GRADLE_VERSION}..."
+    mkdir -p "$GRADLE_HOME"
+    curl -L -o "$DIST_FILE" "$DIST_URL"
+    unzip -q "$DIST_FILE" -d "$(dirname "$GRADLE_HOME")"
+    rm -f "$DIST_FILE"
+fi
+
+exec "$GRADLE_HOME/bin/gradle" "$@"
