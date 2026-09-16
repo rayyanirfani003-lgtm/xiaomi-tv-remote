@@ -146,17 +146,30 @@ class BluetoothHidManager(
     @SuppressLint("MissingPermission")
     private fun tryConnectToPaired() {
         val pairedDevices: Set<BluetoothDevice>? = bluetoothAdapter?.bondedDevices
-        pairedDevices?.forEach { device ->
-            val name = device.name ?: ""
-            if (name.contains("Xiaomi", ignoreCase = true) ||
-                name.contains("TV", ignoreCase = true) ||
-                name.contains("Mi", ignoreCase = true)) {
-                Log.d(TAG, "Found paired TV: $name")
+        if (pairedDevices.isNullOrEmpty()) {
+            Log.d(TAG, "No paired devices found")
+            return
+        }
+
+        Log.d(TAG, "Found ${pairedDevices.size} paired device(s):")
+        pairedDevices.forEach { device ->
+            val name = device.name ?: "Unknown"
+            val address = device.address
+            Log.d(TAG, "  - $name ($address)")
+        }
+
+        // Try to connect to ALL paired devices (Xiaomi TV may have different name)
+        pairedDevices.forEach { device ->
+            val name = device.name ?: "Unknown"
+            try {
+                Log.d(TAG, "Trying to connect to: $name (${device.address})")
                 hidDevice?.connect(device)
                 return
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to connect to $name: ${e.message}")
             }
         }
-        Log.d(TAG, "No paired Xiaomi TV found in ${pairedDevices?.size ?: 0} devices")
+        Log.d(TAG, "No device accepted HID connection from ${pairedDevices.size} paired devices")
     }
 
     @SuppressLint("MissingPermission")

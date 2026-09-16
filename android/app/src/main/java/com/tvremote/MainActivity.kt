@@ -4,6 +4,8 @@ import android.app.Activity
 import android.bluetooth.*
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
@@ -12,6 +14,8 @@ import android.webkit.WebChromeClient
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import java.io.*
 import java.net.*
 import java.util.concurrent.Executors
@@ -25,6 +29,7 @@ class MainActivity : Activity() {
     companion object {
         private const val TAG = "TVRemote"
         private const val REQUEST_ENABLE_BT = 1001
+        private const val REQUEST_BT_PERMISSION = 1002
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,7 +52,19 @@ class MainActivity : Activity() {
                 updateBtDeviceName(name)
             }
         }
-        btManager.init()
+        requestBluetoothPermissions()
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == REQUEST_BT_PERMISSION) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                logToJS("✅ Izin Bluetooth diberikan")
+                btManager.init()
+            } else {
+                logToJS("❌ Izin Bluetooth ditolak!")
+            }
+        }
     }
 
     private fun setupWebView() {
@@ -65,6 +82,31 @@ class MainActivity : Activity() {
 
         webView.webChromeClient = WebChromeClient()
         webView.loadUrl("file:///android_asset/web/index.html")
+    }
+
+    private fun requestBluetoothPermissions() {
+        val permissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            arrayOf(
+                android.Manifest.permission.BLUETOOTH_CONNECT,
+                android.Manifest.permission.BLUETOOTH_SCAN
+            )
+        } else {
+            arrayOf(
+                android.Manifest.permission.BLUETOOTH,
+                android.Manifest.permission.BLUETOOTH_ADMIN
+            )
+        }
+
+        val toRequest = permissions.filter {
+            ContextCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED
+        }
+        if (toRequest.isNotEmpty()) {
+            logToJS("🔐 Meminta izin Bluetooth: ${toRequest.joinToString(", ")}")
+            ActivityCompat.requestPermissions(this, toRequest.toTypedArray(), REQUEST_BT_PERMISSION)
+        } else {
+            logToJS("✅ Izin Bluetooth sudah diberikan")
+            btManager.init()
+        }
     }
 
     private fun updateBtDeviceName(name: String?) {
