@@ -148,6 +148,7 @@ class MainActivity : Activity() {
 
         @JavascriptInterface
         fun connectAdb(ip: String) {
+            logToJS("Menghubungkan ke ${ip}:5555...")
             wifiManager.connect(ip) { success ->
                 runOnUiThread {
                     val js = if (success) {
